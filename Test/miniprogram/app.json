@@ -1,0 +1,14 @@
+{
+  "pages": [
+	"pages/index/index"
+  ],
+  "window": {
+    "backgroundColor": "#DCE2F1",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#DCE2F1",
+    "navigationBarTitleText": "websocket-SDK小程序",
+    "navigationBarTextStyle": "black"
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

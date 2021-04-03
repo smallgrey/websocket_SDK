@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>websocketSDK</title>
+    <script src="../../build/terminalSDK.js"></script>
+    <script>
+        let initParam = {
+            svraddr: '127.0.0.1',
+            port: 3000,
+            ssl: 0 // 0:http, 1:https
+        }
+        let userInfo = {} // 登陆成功后保存用户信息
+        let isReconnect = false // 重连状态标识
+        let listeners = {
+            onEvtLoginSuccess: (ret) => {
+                console.log(ret)
+                userInfo = ret.result.userInfo
+            },
+            onEvtLoginFailed: (ret) => {
+                console.log(ret)
+            },
+            onEvtWebSocketConnect: (ret) => {
+                console.log(ret)
+                if(isReconnect) { // 重连成功
+                    isReconnect = false
+                    tsdkClient.reconnectBindWs(userInfo.userId, (ret) => {
+                        console.log( ret)
+                    })
+                }
+            },
+            onEvtWebSocketClose: (ret) => {
+                console.log(ret)
+                isReconnect = true
+            },
+            onEvtNewsInComing: (ret) => {
+                console.log('新消息：', ret)
+            }
+        }
+        window.tsdkClient = terminalSDK.tsdkCreateClient(initParam, listeners)
+
+        function login() {
+            let loginParam = {
+                username: '张三',
+                pwd: '123456'
+            }
+            tsdkClient.login(loginParam, (ret) => {
+                console.log( ret)
+            })
+        }
+
+        function send() {
+            let chatParam = {
+                target: 2, // 接收方userId
+                message: '你好'
+            }
+            tsdkClient.singlePersonChat(chatParam, (ret) => {
+                console.log( ret)
+            })
+        }
+        
+    </script>
+</head>
+<body>
+    <button onclick="login()">登录</button>
+    <button onclick="send()">发送消息</button>
+</body>
+</html>
